@@ -1,8 +1,7 @@
-import {useEffect, useState} from 'react'
+import { useState } from 'react'
 import UserInputCard from "./UserInput.jsx";
 
 function App() {
-
   const [formData, setFormData] = useState({
       expenditure: '',
       cpi: '',
@@ -11,96 +10,55 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
 
-  useEffect(() => {
-    if (formData.expenditure !== '' || formData.cpi !== '') { // Change this condition based on when you want to make the request
+  const handleDataChange = (data) => {
+    setFormData((prevData) => ({...prevData,...data }));
+  };
+
+  const handleSubmit = () => {
+    if (formData.expenditure !== '' && formData.cpi !== '') {
       setLoading(true);
 
-      // Here, I'm using the Fetch API for the AJAX request. You can replace this with your preferred method.
       fetch('http://127.0.0.1:5000/api/cpi/process', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
-
+        body: JSON.stringify(formData),
       })
-        .then(response => response.json())
-        .then(data => {
+       .then((response) => response.json())
+       .then((data) => {
           setResults(data);
-          console.log(data)
+          console.log(data);
           setLoading(false);
         })
-        .catch(err => {
+       .catch((err) => {
           console.error("Error fetching data:", err);
           setLoading(false);
         });
     }
-  }, [formData]);
-
-
-  const handleDataChange = (data) => {
-    setFormData(prevData => ({ ...prevData, ...data }));
-  }
-
-  // To see changes
-  console.log(formData);
-
-  // const renderMessageBasedOnValue = (valueStr) => {
-  //   const value = parseFloat(valueStr.replace('£', ''));
-
-  //   if (value < 1000) {
-  //     return "You've got plenty of money, give some to charity";
-  //   } else if (value >= 1000 && value <= 3000) {
-  //     return "";
-  //   } else {
-  //     return "You don't have much money left after paying your bills";
-  //   }
-
-  // };
-
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 ">
 
-      {/* Navbar */}
       <nav className="bg-blue-500 p-4 text-white">
         <div className="container mx-auto">
-          <h1 className="text-2xl font-bold">The Thing 1.1</h1>
+          <h1 className="text-2xl font-bold">The Thing</h1>
         </div>
       </nav>
 
-      {/* Main content / Hero Section */}
       <header className="">
-        <section className="hero py-20">
-          <div className="container mx-auto text-center">
-   
+        <section className="hero my-10">
+          <div className="container mx-auto text-center">   
             <img className="text-center mx-auto" src="/logo.png" />
-
-            {/*
-            <h1 className="text-4xl mb-4">Welcome to The Thing 1.0</h1>
-            <p className="text-gray-600 mb-8">
-              A data visualisation tool
-            </p>
-            <hr className="my-10"/>
-            <h2 className="text-xl">How it works</h2>
-            <div className="max-w-md mx-auto py-5">
-              <ol className="list-decimal">
-                  <li>Enter data</li>
-                  <li>View results</li>
-              </ol>
-            </div>
-  */}
             <div className="my-10">
-              <UserInputCard onDataChange={handleDataChange} />
+              <UserInputCard onDataChange={handleDataChange} onSubmit={handleSubmit} />
             </div>
           </div>
         </section>
       </header>
 
-      {/* Main content / Hero Section */}
       <main className="flex-grow">
-        {/* ... (Unchanged) ... */}
-
         {loading &&
         <div className="mx-auto text-center" role="status">
           <svg aria-hidden="true" className="inline w-10 h-10 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -115,16 +73,14 @@ function App() {
             <div className="text-center p-10 bg-white rounded-xl shadow-lg">
               <p className='mb-3'>Your new expenditure...</p>
               <span className="text-6xl font-bold block">{results}</span>
-              {/* <p className="mt-4 text-xl">{renderMessageBasedOnValue(results)}</p> */}
             </div>
           </div>
         )}
       </main>
 
-      {/* Footer */}
       <footer className="bg-gray-800 text-white py-6">
         <div className="container mx-auto text-center">
-          <p>&copy; {new Date().getFullYear()} The Thing 1.1</p>
+          <p>&copy; {new Date().getFullYear()}</p>
         </div>
       </footer>
 

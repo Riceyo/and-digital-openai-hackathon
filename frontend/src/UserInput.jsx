@@ -1,88 +1,66 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-function UserInputCard({ onDataChange }) {
+function UserInputCard({ onDataChange, onSubmit }) {
     const [expenditure, setExpenditure] = useState('');
-    const [adults, setAdults] = useState(2);
-    const [children, setChildren] = useState(0);
-    const [cpi, setCPI] = useState(0);
+    const [cpi, setCPI] = useState('');
 
     const handleInputChange = (field, value) => {
         if (field === 'expenditure') {
             setExpenditure(value);
-        } else if (field === 'adults') {
-            setAdults(value);
         } else if (field === 'cpi') {
             setCPI(value);
-        } else if (field === 'children') {
-            setChildren(value);
         }
         onDataChange({ [field]: value });
     }
 
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      if (expenditure && cpi) {
+          onSubmit();
+      } else {
+          alert('Please fill in all fields.');
+      }
+  }
+
     return (
-      <div className="bg-white rounded p-6 w-full shadow-lg">
-          <div className="flex flex-row justify-around">
+        <div className="bg-white rounded p-6 w-full shadow-lg">
+        <div className="flex flex-row justify-around mb-4">
 
-              {/* CPI */}
-              <div className="mb-4">
-                  <label htmlFor="cpi" className="block text-gray-700 mb-2">Forecast CPI:</label>
-                  <input
-                    type="number"
-                    id="cpi"
-                    placeholder=""
-                    value={cpi}
-                    onChange={e => handleInputChange('cpi', e.target.value)}
-                    className="w-full p-2 border rounded"
-                  />
-              </div>
+            <div className="mr-4">
+                <label htmlFor="cpi" className="block text-gray-700 mb-2">Forecast CPI:</label>
+                <input
+                  type="number"
+                  id="cpi"
+                  placeholder=""
+                  value={cpi}
+                  onChange={e => handleInputChange('cpi', e.target.value)}
+                  className="w-full p-2 border rounded"
+                />
+            </div>
 
-              {/* Income Input */}
-              <div className="mb-4">
-                  <label htmlFor="income" className="block text-gray-700 mb-2">Weekly Expenditure:</label>
-                  <input
-                    type="number"
-                    id="expenditure"
-                    placeholder=""
-                    value={expenditure}
-                    onChange={e => handleInputChange('expenditure', e.target.value)}
-                    className="w-full p-2 border rounded"
-                  />
-              </div>
+            <div>
+                <label htmlFor="income" className="block text-gray-700 mb-2">Weekly Expenditure:</label>
+                <input
+                  type="number"
+                  id="expenditure"
+                  placeholder=""
+                  value={expenditure}
+                  onChange={e => handleInputChange('expenditure', e.target.value)}
+                  className="w-full p-2 border rounded"
+                  
+                />
+            </div>
 
-              {/* Adults Input */}
-              {/*
-              <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Number of Adults:</label>
-                  <div className="flex items-center">
-                      <button onClick={() => handleInputChange('adults', Math.max(0, adults - 1))} className="px-3 py-2 border rounded-l">-</button>
-                      <input
-                        type="number"
-                        value={adults}
-                        onChange={e => handleInputChange('adults', +e.target.value)}
-                        className="w-20 text-center p-2 border-t border-b"
-                      />
-                      <button onClick={() => handleInputChange('adults', adults + 1)} className="px-3 py-2 border rounded-r">+</button>
-                  </div>
-              </div>
-              */}
+        </div>
 
-              {/* Children Input */}
-              {/* 
-              <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Number of Children:</label>
-                  <div className="flex items-center">
-                      <button onClick={() => handleInputChange('children', Math.max(0, children - 1))} className="px-3 py-2 border rounded-l">-</button>
-                      <input
-                        type="number"
-                        value={children}
-                        onChange={e => handleInputChange('children', +e.target.value)}
-                        className="w-20 text-center p-2 border-t border-b"
-                      />
-                      <button onClick={() => handleInputChange('children', children + 1)} className="px-3 py-2 border rounded-r">+</button>
-                  </div>
-              </div>
-            */}
-          </div>
+        <div className="text-center">
+            <button
+              onClick={handleSubmit}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block mx-auto mt-10"
+            >
+              Submit
+            </button>
+        </div>
       </div>
     );
 }
